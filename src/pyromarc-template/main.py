@@ -2,9 +2,9 @@
 import log
 from template import Template
 
-if __name__=="__main__":
+if __name__ == "__main__":
     log.logger.info("start pyromarc template\n----------")
-    
+
     url = "./spectest.yml"
     datas_mir = """
     - [001, PPNxxxx ]
@@ -33,4 +33,3 @@ if __name__=="__main__":
         log.logger.info("FROM TEMPLATE TO DATA\n----------")
         log.logger.info("Data: %s\n----------" % (template.datas,))
         log.logger.info("Template: %s\n\n" % (template.template,))
-
