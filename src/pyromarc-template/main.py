@@ -3,9 +3,9 @@ import log
 from template import Template
 
 if __name__=="__main__":
-    log.logger.info("start pyromarc template")
+    log.logger.info("start pyromarc template\n----------")
     
-    url = "/home/morgan/dev/pyromarc-template/src/pyromarc-template/spectest.yml"
+    url = "./spectest.yml"
     datas = """
     - [001, PPNxxxx ]
     - [200, [ [a, Doe], [b, john], [b, elias], [b, frederik] ]]
@@ -17,7 +17,7 @@ if __name__=="__main__":
         template = Template(f)
         template.load_mir_data(datas)
 
-    log.logger.info("Spec: %s" % (template.spec,))
-    log.logger.info("Data: %s" % (template.datas,))
-    log.logger.info("Template: %s" % (template.template,))
+    log.logger.info("Spec: %s\n----------" % (template.spec,))
+    log.logger.info("Data: %s\n----------" % (template.datas,))
+    log.logger.info("Template: %s\n----------" % (template.template,))
 
