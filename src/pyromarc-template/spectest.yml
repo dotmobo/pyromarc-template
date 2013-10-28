@@ -1,0 +1,5 @@
+001: id
+200: [ authors, { a: name, b: firstname } ]
+300: { a: title, b: subtitle }
+700: [ auth_author, { a: name, b: firstname } ]
+701: [ auth_author, { a: name, b: firstname } ]
