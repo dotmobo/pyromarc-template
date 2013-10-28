@@ -15,7 +15,7 @@ class Template(object):
     def __init__(self, spec):
         """ load the yaml file into dict """ 
         self.spec = yaml.safe_load(spec)
-        self.datas = {}
+        self.datas = []
         self.template = {}
 
     def _load_mir_str(self, data):
@@ -46,6 +46,7 @@ class Template(object):
     def load_mir_data(self, datas):
         """ load mir data into template"""
         self.datas = yaml.safe_load(datas)
+        self.template = {}
         for data in self.datas:
             spec_value = self.spec[data[0]] 
             if isinstance(spec_value, str):
@@ -61,3 +62,46 @@ class Template(object):
                     self.template.update({parent_key: self._load_mir_list(data),})
 
 
+    def _load_dict_str(self, key, value):
+        """ load dict str """
+        return [key, self.template[value]]
+
+    def _load_dict_dict(self, key, value):
+        """ load dict dict """
+        l = []
+        for subkey, subvalue in value.items():
+            l.append([subkey, self.template[subvalue]])
+        return [key, sorted(l)]
+
+    def _load_dict_list(self, key, value):
+        """ load dict list """
+        parent_key = value[0]
+        return_list = [] 
+        if parent_key in self.template:
+            parent_list = self.template[parent_key]
+            l2 = []
+            for line in parent_list:
+                l=[]
+                for subkey,subvalue in value[1].items():
+                    if isinstance(line[subvalue], list):
+                        for i in line[subvalue]:
+                            l.append([subkey,i])
+                    else:
+                        l.append([subkey,line[subvalue]])
+                l2.append([key,sorted(l)])
+            return_list+=l2
+
+        return return_list
+
+    def load_dict_template(self, template):
+        """ load dict data into template """
+        self.template = yaml.safe_load(template)
+        self.datas = [] 
+
+        for key,value in self.spec.items():
+            if isinstance(value, str):
+                self.datas.append(self._load_dict_str(key,value))
+            elif isinstance(value, dict):
+                self.datas.append(self._load_dict_dict(key,value))
+            elif isinstance(value, list):
+                self.datas += self._load_dict_list(key,value)
