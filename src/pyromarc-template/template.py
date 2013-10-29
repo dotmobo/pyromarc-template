@@ -5,33 +5,33 @@ import types
 """ 
 Pyromarc-template
 -----------------
-Convert mir to dict with a yaml spec
+Mir/data convertion with a yaml spec
 """
 
 
 class Template(object):
 
-    """ Template class to convert mir/dict """
+    """ Template class to convert mir/data """
 
     def __init__(self, spec):
         """ load the yaml file into dict """
         self.spec = yaml.safe_load(spec)
-        self.datas = []
-        self.template = {}
+        self.mir = []
+        self.data = {}
 
-    def _load_mir_str(self, data):
+    def _load_mir_str(self, tab):
         """ load mir str """
-        return {self.spec[data[0]]: data[1], }
+        return {self.spec[tab[0]]: tab[1], }
 
-    def _load_mir_dict(self, data):
+    def _load_mir_dict(self, tab):
         """ load mir dict """
-        return {self.spec[data[0]][elem[0]]: elem[1] for elem in data[1]}
+        return {self.spec[tab[0]][elem[0]]: elem[1] for elem in tab[1]}
 
-    def _load_mir_list(self, data):
+    def _load_mir_list(self, tab):
         """ load mir list """
         subdict = {}
-        for elem in data[1]:
-            key = self.spec[data[0]][1][elem[0]]
+        for elem in tab[1]:
+            key = self.spec[tab[0]][1][elem[0]]
             value = elem[1]
 
             if key in subdict:
@@ -44,43 +44,43 @@ class Template(object):
 
         return [subdict, ]
 
-    def load_mir_data(self, datas):
-        """ load mir data into template"""
-        self.datas = yaml.safe_load(datas)
-        self.template = {}
-        for data in self.datas:
-            spec_value = self.spec[data[0]]
+    def build_data_from_mir(self, mir_yaml):
+        """ build data from mir """
+        self.mir = yaml.safe_load(mir_yaml)
+        self.data = {}
+        for tab in self.mir:
+            spec_value = self.spec[tab[0]]
             if isinstance(spec_value, str):
-                self.template.update(self._load_mir_str(data))
+                self.data.update(self._load_mir_str(tab))
             elif isinstance(spec_value, dict):
-                self.template.update(self._load_mir_dict(data))
+                self.data.update(self._load_mir_dict(tab))
             elif isinstance(spec_value, list):
                 parent_key = spec_value[0]
-                if parent_key in self.template:
+                if parent_key in self.data:
                     concat_list = self._load_mir_list(
-                        data) + self.template[parent_key]
-                    self.template[parent_key] = concat_list
+                        tab) + self.data[parent_key]
+                    self.data[parent_key] = concat_list
                 else:
-                    self.template.update(
-                        {parent_key: self._load_mir_list(data), })
+                    self.data.update(
+                        {parent_key: self._load_mir_list(tab), })
 
-    def _load_dict_str(self, key, value):
-        """ load dict str """
-        return [key, self.template[value]]
+    def _load_data_str(self, key, value):
+        """ load data str """
+        return [key, self.data[value]]
 
-    def _load_dict_dict(self, key, value):
-        """ load dict dict """
+    def _load_data_dict(self, key, value):
+        """ load data dict """
         l = []
         for subkey, subvalue in value.items():
-            l.append([subkey, self.template[subvalue]])
+            l.append([subkey, self.data[subvalue]])
         return [key, sorted(l)]
 
-    def _load_dict_list(self, key, value):
-        """ load dict list """
+    def _load_data_list(self, key, value):
+        """ load data list """
         parent_key = value[0]
         return_list = []
-        if parent_key in self.template:
-            parent_list = self.template[parent_key]
+        if parent_key in self.data:
+            parent_list = self.data[parent_key]
             l2 = []
             for line in parent_list:
                 l = []
@@ -95,17 +95,25 @@ class Template(object):
 
         return return_list
 
-    def load_dict_template(self, template):
-        """ load dict data into template """
-        self.template = yaml.safe_load(template)
-        self.datas = []
+    def build_mir_from_data(self, data_yaml):
+        """ build mir from data """
+        self.data = yaml.safe_load(data_yaml)
+        self.mir = []
 
         for key, value in self.spec.items():
             if isinstance(value, str):
-                self.datas.append(self._load_dict_str(key, value))
+                self.mir.append(self._load_data_str(key, value))
             elif isinstance(value, dict):
-                self.datas.append(self._load_dict_dict(key, value))
+                self.mir.append(self._load_data_dict(key, value))
             elif isinstance(value, list):
-                self.datas += self._load_dict_list(key, value)
+                self.mir += self._load_data_list(key, value)
 
-        self.datas = sorted(self.datas)
+        self.mir = sorted(self.mir)
+
+    def get_yaml_data(self):
+        """ get yaml data """
+        return yaml.dump(self.data)
+
+    def get_yaml_mir(self):
+        """ get yaml mir """
+        return yaml.dump(self.mir)
