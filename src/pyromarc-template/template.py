@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import types
+import log
 
 """ 
 Pyromarc-template
@@ -48,19 +49,23 @@ class Template(object):
         self.mir = mir
         self.data = {}
         for tab in self.mir:
-            spec_value = self.spec[tab[0]]
-            if isinstance(spec_value, str):
-                self.data.update(self._load_mir_str(tab))
-            elif isinstance(spec_value, dict):
-                self.data.update(self._load_mir_dict(tab))
-            elif isinstance(spec_value, list):
-                parent_key = spec_value[0]
-                if parent_key in self.data:
-                    concat_list = self.data[parent_key] + self._load_mir_list(tab)
-                    self.data[parent_key] = concat_list
-                else:
-                    self.data.update(
-                        {parent_key: self._load_mir_list(tab), })
+            try:
+                spec_value = self.spec[tab[0]]
+                if isinstance(spec_value, str):
+                    self.data.update(self._load_mir_str(tab))
+                elif isinstance(spec_value, dict):
+                    self.data.update(self._load_mir_dict(tab))
+                elif isinstance(spec_value, list):
+                    parent_key = spec_value[0]
+                    if parent_key in self.data:
+                        concat_list = self.data[parent_key] + self._load_mir_list(tab)
+                        self.data[parent_key] = concat_list
+                    else:
+                        self.data.update(
+                            {parent_key: self._load_mir_list(tab), })
+            except KeyError as e:
+                log.logger.warn("Spec %s doesn't exist" % (tab[0],))
+
 
     def _load_data_str(self, key, value):
         """ load data str """
