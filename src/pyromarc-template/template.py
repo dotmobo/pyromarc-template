@@ -19,13 +19,31 @@ class Template(object):
         self.mir = []
         self.data = {}
 
+    def _do_mir_multivalue(self, d, key, value):
+        """ do mir multivalue """
+        if key in d:
+            if isinstance(d[key], list):
+                d[key].append(value)
+            else:
+                d[key] = [d[key], value]
+        else:
+            d[key] = value
+
+        return d
+
     def _load_mir_str(self, tab):
         """ load mir str """
         return {self.spec[tab[0]]: tab[1], }
 
     def _load_mir_dict(self, tab):
         """ load mir dict """
-        return {self.spec[tab[0]][elem[0]]: elem[1] for elem in tab[1]}
+        d = {}
+        for elem in tab[1]:
+            key = self.spec[tab[0]][elem[0]]
+            value = elem[1]
+            d = self._do_mir_multivalue(d, key, value)
+
+        return d
 
     def _load_mir_list(self, tab):
         """ load mir list """
@@ -33,14 +51,7 @@ class Template(object):
         for elem in tab[1]:
             key = self.spec[tab[0]][1][elem[0]]
             value = elem[1]
-
-            if key in subdict:
-                if isinstance(subdict[key], list):
-                    subdict[key].append(value)
-                else:
-                    subdict[key] = [subdict[key], value]
-            else:
-                subdict[key] = value
+            d = self._do_mir_multivalue(subdict, key, value)
 
         return [subdict, ]
 
@@ -58,7 +69,8 @@ class Template(object):
                 elif isinstance(spec_value, list):
                     parent_key = spec_value[0]
                     if parent_key in self.data:
-                        concat_list = self.data[parent_key] + self._load_mir_list(tab)
+                        concat_list = self.data[
+                            parent_key] + self._load_mir_list(tab)
                         self.data[parent_key] = concat_list
                     else:
                         self.data.update(
@@ -66,6 +78,16 @@ class Template(object):
             except KeyError as e:
                 log.logger.warn("Spec %s doesn't exist" % (tab[0],))
 
+    def _do_data_multivalue(self, d, v):
+        """ do data multivalue """
+        l = []
+        for subkey, subvalue in d.items():
+            if isinstance(v[subvalue], list):
+                for i in v[subvalue]:
+                    l.append([subkey, i])
+            else:
+                l.append([subkey, v[subvalue]])
+        return l
 
     def _load_data_str(self, key, value):
         """ load data str """
@@ -73,9 +95,7 @@ class Template(object):
 
     def _load_data_dict(self, key, value):
         """ load data dict """
-        l = []
-        for subkey, subvalue in value.items():
-            l.append([subkey, self.data[subvalue]])
+        l = self._do_data_multivalue(value, self.data)
         return [key, sorted(l)]
 
     def _load_data_list(self, key, value):
@@ -86,13 +106,7 @@ class Template(object):
             parent_list = self.data[parent_key]
             l2 = []
             for line in parent_list:
-                l = []
-                for subkey, subvalue in value[1].items():
-                    if isinstance(line[subvalue], list):
-                        for i in line[subvalue]:
-                            l.append([subkey, i])
-                    else:
-                        l.append([subkey, line[subvalue]])
+                l = self._do_data_multivalue(value[1], line)
                 l2.append([key, sorted(l)])
             return_list += l2
 
@@ -102,14 +116,15 @@ class Template(object):
         """ build mir from data """
         self.data = data
         self.mir = []
-
-        for key, value in self.spec.items():
-            if isinstance(value, str):
-                self.mir.append(self._load_data_str(key, value))
-            elif isinstance(value, dict):
-                self.mir.append(self._load_data_dict(key, value))
-            elif isinstance(value, list):
-                self.mir += self._load_data_list(key, value)
+        try:
+            for key, value in self.spec.items():
+                if isinstance(value, str):
+                    self.mir.append(self._load_data_str(key, value))
+                elif isinstance(value, dict):
+                    self.mir.append(self._load_data_dict(key, value))
+                elif isinstance(value, list):
+                    self.mir += self._load_data_list(key, value)
+        except KeyError as e:
+            log.logger.warn("Key %s doesn't exist" % (key,))
 
         self.mir = sorted(self.mir)
-

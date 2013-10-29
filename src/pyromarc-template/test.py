@@ -3,7 +3,9 @@ import unittest
 from template import Template
 import yaml
 
+
 class TemplateTest(unittest.TestCase):
+
     """ unit test for template """
 
     def setUp(self):
@@ -14,12 +16,16 @@ class TemplateTest(unittest.TestCase):
             300: { a: title, b: subtitle }
             700: [ auth_author, { a: name, b: firstname } ]
             701: [ auth_author, { a: name, b: firstname } ]
+            002: code 
+            400: { a: ville, b: adresse }
         """
         self.mir_yaml = """
             - [001, PPNxxxx ]
+            - [002, toto ]
             - [200, [ [a, Doe], [b, elias], [b, frederik], [b, john] ]]
             - [200, [ [a, Doe], [b, jane]                            ]]
             - [300, [ [a, "i can haz title"], [b, "also subs"]       ]]
+            - [400, [ [a, "Strasbourg"], [b, "rue 1"], [b, "rue 2"]       ]]
         """
         self.data_yaml = """
             authors:
@@ -28,6 +34,9 @@ class TemplateTest(unittest.TestCase):
             title: "i can haz title"
             subtitle: "also subs"
             id: PPNxxxx
+            code: toto
+            adresse: [rue 1, rue 2]
+            ville: Strasbourg
         """
         self.template = Template(yaml.safe_load(self.spec_yaml))
 

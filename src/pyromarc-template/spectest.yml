@@ -3,3 +3,5 @@
 300: { a: title, b: subtitle }
 700: [ auth_author, { a: name, b: firstname } ]
 701: [ auth_author, { a: name, b: firstname } ]
+002: code 
+400: { a: ville, b: adresse }

@@ -9,9 +9,11 @@ if __name__ == "__main__":
     url = "./spectest.yml"
     mir_yaml = """
     - [001, PPNxxxx ]
+    - [002, toto ]
     - [200, [ [a, Doe], [b, elias], [b, frederik], [b, john] ]]
     - [200, [ [a, Doe], [b, jane]                            ]]
     - [300, [ [a, "i can haz title"], [b, "also subs"]       ]]
+    - [400, [ [a, "Strasbourg"], [b, "rue 1"], [b, "rue 2"]       ]]
     """
 
     data_yaml = """
@@ -21,6 +23,9 @@ if __name__ == "__main__":
     title: "i can haz title"
     subtitle: "also subs"
     id: PPNxxxx
+    code: toto
+    adresse: [rue 1, rue 2]
+    ville: Strasbourg
     """
 
     with open(url) as f:
@@ -29,12 +34,14 @@ if __name__ == "__main__":
         template.build_data_from_mir(yaml.safe_load(mir_yaml))
         log.logger.info("BUILD DATA FROM MIR\n----------")
         log.logger.info("Mir: %s\n----------" % (template.mir,))
-        log.logger.info("Mir Yaml: %s\n----------" % (yaml.dump(template.mir),))
+        log.logger.info("Mir Yaml: %s\n----------" %
+                        (yaml.dump(template.mir),))
         log.logger.info("Data: %s\n\n" % (template.data,))
         log.logger.info("Data Yaml: %s\n\n" % (yaml.dump(template.data),))
         template.build_mir_from_data(yaml.safe_load(data_yaml))
         log.logger.info("BUILD MIR FROM DATA\n----------")
         log.logger.info("Mir: %s\n----------" % (template.mir,))
-        log.logger.info("Mir Yaml: %s\n----------" % (yaml.dump(template.mir),))
+        log.logger.info("Mir Yaml: %s\n----------" %
+                        (yaml.dump(template.mir),))
         log.logger.info("Data: %s\n\n" % (template.data,))
         log.logger.info("Data Yaml: %s\n\n" % (yaml.dump(template.data),))
