@@ -56,8 +56,7 @@ class Template(object):
             elif isinstance(spec_value, list):
                 parent_key = spec_value[0]
                 if parent_key in self.data:
-                    concat_list = self._load_mir_list(
-                        tab) + self.data[parent_key]
+                    concat_list = self.data[parent_key] + self._load_mir_list(tab)
                     self.data[parent_key] = concat_list
                 else:
                     self.data.update(

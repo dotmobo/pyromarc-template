@@ -9,14 +9,14 @@ if __name__ == "__main__":
     url = "./spectest.yml"
     mir_yaml = """
     - [001, PPNxxxx ]
-    - [200, [ [a, Doe], [b, john], [b, elias], [b, frederik] ]]
+    - [200, [ [a, Doe], [b, elias], [b, frederik], [b, john] ]]
     - [200, [ [a, Doe], [b, jane]                            ]]
     - [300, [ [a, "i can haz title"], [b, "also subs"]       ]]
     """
 
     data_yaml = """
     authors:
-        - { name: Doe, firstname: [john, elias, frederik] }
+        - { name: Doe, firstname: [elias, frederik, john] }
         - { name: Doe, firstname: jane }
     title: "i can haz title"
     subtitle: "also subs"
