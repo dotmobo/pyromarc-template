@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
-import yaml
 import types
 
 """ 
 Pyromarc-template
 -----------------
-Mir/data convertion with a yaml spec
+Mir/data convertion with a spec
 """
 
 
@@ -14,8 +13,8 @@ class Template(object):
     """ Template class to convert mir/data """
 
     def __init__(self, spec):
-        """ load the yaml file into dict """
-        self.spec = yaml.safe_load(spec)
+        """ load the spec into dict """
+        self.spec = spec
         self.mir = []
         self.data = {}
 
@@ -44,9 +43,9 @@ class Template(object):
 
         return [subdict, ]
 
-    def build_data_from_mir(self, mir_yaml):
+    def build_data_from_mir(self, mir):
         """ build data from mir """
-        self.mir = yaml.safe_load(mir_yaml)
+        self.mir = mir
         self.data = {}
         for tab in self.mir:
             spec_value = self.spec[tab[0]]
@@ -95,9 +94,9 @@ class Template(object):
 
         return return_list
 
-    def build_mir_from_data(self, data_yaml):
+    def build_mir_from_data(self, data):
         """ build mir from data """
-        self.data = yaml.safe_load(data_yaml)
+        self.data = data
         self.mir = []
 
         for key, value in self.spec.items():
@@ -110,10 +109,3 @@ class Template(object):
 
         self.mir = sorted(self.mir)
 
-    def get_yaml_data(self):
-        """ get yaml data """
-        return yaml.dump(self.data)
-
-    def get_yaml_mir(self):
-        """ get yaml mir """
-        return yaml.dump(self.mir)

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import log
 from template import Template
+import yaml
 
 if __name__ == "__main__":
     log.logger.info("start pyromarc template\n----------")
@@ -23,17 +24,17 @@ if __name__ == "__main__":
     """
 
     with open(url) as f:
-        template = Template(f)
+        template = Template(yaml.safe_load(f))
         log.logger.info("Spec: %s\n----------\n" % (template.spec,))
-        template.build_data_from_mir(mir_yaml)
+        template.build_data_from_mir(yaml.safe_load(mir_yaml))
         log.logger.info("BUILD DATA FROM MIR\n----------")
         log.logger.info("Mir: %s\n----------" % (template.mir,))
-        log.logger.info("Mir Yaml: %s\n----------" % (template.get_yaml_mir(),))
+        log.logger.info("Mir Yaml: %s\n----------" % (yaml.dump(template.mir),))
         log.logger.info("Data: %s\n\n" % (template.data,))
-        log.logger.info("Data Yaml: %s\n\n" % (template.get_yaml_data(),))
-        template.build_mir_from_data(data_yaml)
+        log.logger.info("Data Yaml: %s\n\n" % (yaml.dump(template.data),))
+        template.build_mir_from_data(yaml.safe_load(data_yaml))
         log.logger.info("BUILD MIR FROM DATA\n----------")
         log.logger.info("Mir: %s\n----------" % (template.mir,))
-        log.logger.info("Mir Yaml: %s\n----------" % (template.get_yaml_mir(),))
+        log.logger.info("Mir Yaml: %s\n----------" % (yaml.dump(template.mir),))
         log.logger.info("Data: %s\n\n" % (template.data,))
-        log.logger.info("Data Yaml: %s\n\n" % (template.get_yaml_data(),))
+        log.logger.info("Data Yaml: %s\n\n" % (yaml.dump(template.data),))
