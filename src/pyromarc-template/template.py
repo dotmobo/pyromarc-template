@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import types
 import log
 
 """ 
@@ -69,9 +68,7 @@ class Template(object):
                 elif isinstance(spec_value, list):
                     parent_key = spec_value[0]
                     if parent_key in self.data:
-                        concat_list = self.data[
-                            parent_key] + self._load_mir_list(tab)
-                        self.data[parent_key] = concat_list
+                        self.data[parent_key] += self._load_mir_list(tab)
                     else:
                         self.data.update(
                             {parent_key: self._load_mir_list(tab), })
@@ -103,12 +100,9 @@ class Template(object):
         parent_key = value[0]
         return_list = []
         if parent_key in self.data:
-            parent_list = self.data[parent_key]
-            l2 = []
-            for line in parent_list:
+            for line in self.data[parent_key]:
                 l = self._do_data_multivalue(value[1], line)
-                l2.append([key, sorted(l)])
-            return_list += l2
+                return_list.append([key, sorted(l)])
 
         return return_list
 
