@@ -1,7 +1,7 @@
 pyromarc-template
 =================
 [![Build Status](https://travis-ci.org/morganbohn/pyromarc-template.svg?branch=devel)](https://travis-ci.org/morganbohn/pyromarc-template)
-[![Coverage Status](https://coveralls.io/repos/morganbohn/pyromarc-template/badge.png)](https://coveralls.io/r/morganbohn/pyromarc-template)
+[![Coverage Status](https://coveralls.io/repos/morganbohn/pyromarc-template/badge.png?branch=master)](https://coveralls.io/r/morganbohn/pyromarc-template?branch=master)
 
 Templating system for pyromarc : https://github.com/agrausem/pyromarc
 
