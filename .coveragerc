@@ -1,0 +1,6 @@
+[run]
+source = 
+    src/pyromarc-template
+
+[report]
+omit = */test.py
