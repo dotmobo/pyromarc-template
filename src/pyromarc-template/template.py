@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import log
 
-""" 
+"""
 Pyromarc-template
 -----------------
 Mir/data convertion with a spec
@@ -52,7 +52,7 @@ class Template(object):
             value = elem[1]
             d = self._do_mir_multivalue(subdict, key, value)
 
-        return [subdict, ]
+        return [d, ]
 
     def build_data_from_mir(self, mir):
         """ build data from mir """
@@ -72,8 +72,8 @@ class Template(object):
                     else:
                         self.data.update(
                             {parent_key: self._load_mir_list(tab), })
-            except KeyError as e:
-                log.logger.warn("Spec %s doesn't exist" % (tab[0],))
+            except KeyError:
+                log.logger.warn("Spec %s doesn't exist", tab[0])
 
     def _do_data_multivalue(self, d, v):
         """ do data multivalue """
@@ -118,7 +118,7 @@ class Template(object):
                     self.mir.append(self._load_data_dict(key, value))
                 elif isinstance(value, list):
                     self.mir += self._load_data_list(key, value)
-        except KeyError as e:
-            log.logger.warn("Key %s doesn't exist" % (key,))
+        except KeyError:
+            log.logger.warn("Key %s doesn't exist", key)
 
         self.mir = sorted(self.mir)

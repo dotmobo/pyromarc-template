@@ -30,18 +30,16 @@ if __name__ == "__main__":
 
     with open(url) as f:
         template = Template(yaml.safe_load(f))
-        log.logger.info("Spec: %s\n----------\n" % (template.spec,))
+        log.logger.info("Spec: %s\n----------\n", template.spec)
         template.build_data_from_mir(yaml.safe_load(mir_yaml))
         log.logger.info("BUILD DATA FROM MIR\n----------")
-        log.logger.info("Mir: %s\n----------" % (template.mir,))
-        log.logger.info("Mir Yaml: %s\n----------" %
-                        (yaml.dump(template.mir),))
-        log.logger.info("Data: %s\n\n" % (template.data,))
-        log.logger.info("Data Yaml: %s\n\n" % (yaml.dump(template.data),))
+        log.logger.info("Mir: %s\n----------", template.mir)
+        log.logger.info("Mir Yaml: %s\n----------", yaml.dump(template.mir))
+        log.logger.info("Data: %s\n\n", template.data)
+        log.logger.info("Data Yaml: %s\n\n", yaml.dump(template.data))
         template.build_mir_from_data(yaml.safe_load(data_yaml))
         log.logger.info("BUILD MIR FROM DATA\n----------")
-        log.logger.info("Mir: %s\n----------" % (template.mir,))
-        log.logger.info("Mir Yaml: %s\n----------" %
-                        (yaml.dump(template.mir),))
-        log.logger.info("Data: %s\n\n" % (template.data,))
-        log.logger.info("Data Yaml: %s\n\n" % (yaml.dump(template.data),))
+        log.logger.info("Mir: %s\n----------", template.mir)
+        log.logger.info("Mir Yaml: %s\n----------", yaml.dump(template.mir))
+        log.logger.info("Data: %s\n\n", template.data)
+        log.logger.info("Data Yaml: %s\n\n", yaml.dump(template.data))
